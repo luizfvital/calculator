@@ -82,7 +82,7 @@
         ],
         [
           { input: "0", className: "flex-1 h-16" },
-          { input: "," },
+          { input: "." },
           { input: "=", className: "w-16 h-16 bg-[#7F45E2]" },
         ],
       ];
@@ -148,7 +148,29 @@
 
         function handleClick(e) {
           console.log(e.target.dataset.button);
+          const buttonClicked = e.target.dataset.button;
+
+          if (!buttonClicked) return;
+
+          /* If button equals to "=", calculate the operation using eval()*/
+          if (buttonClicked === "=") {
+            setResult(eval(operation));
+            return;
+          }
+
+          /* If button equals a number or an operator, add it to operation state variable */
+          if (buttonClicked !== "CE" && buttonClicked !== "C") {
+            setOperation((operation) => (operation += buttonClicked));
+          }
+
+          /* If button equals a C, reset calculator */
+          if (buttonClicked === "C") {
+            setResult("");
+            setOperation("");
+          }
         }
+
+        console.log(operation);
 
         return (
           <div className="flex gap-4">
@@ -168,18 +190,18 @@
                 <Text
                   as="div"
                   variant="muted"
-                  className="flex items-center justify-end"
+                  className="flex items-center justify-end h-7"
                 >
-                  {operation}
+                  {result && operation}
                 </Text>
 
                 <div
                   className={`
-                flex items-center justify-between  
+                flex items-center justify-between h-9
               `}
                 >
                   <Text variant="muted">=</Text>
-                  <Text variant="blast">{result}</Text>
+                  <Text variant="blast">{result ? result : operation}</Text>
                 </div>
               </div>
 
