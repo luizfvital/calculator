@@ -160,6 +160,18 @@
 
           /* If button equals a number or an operator, add it to operation state variable */
           if (buttonClicked !== "CE" && buttonClicked !== "C") {
+            if (
+              (!operation.length && buttonClicked === "*") ||
+              (!operation.length && buttonClicked === "/")
+            )
+              return;
+
+            if (
+              isNaN(buttonClicked) &&
+              isNaN(operation.charAt(operation.length - 1))
+            )
+              return;
+
             setOperation((operation) => (operation += buttonClicked));
           }
 
@@ -167,6 +179,10 @@
           if (buttonClicked === "C") {
             setResult("");
             setOperation("");
+          }
+
+          if (buttonClicked === "CE") {
+            setOperation((operation) => operation.slice(0, -1));
           }
         }
 
