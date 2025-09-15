@@ -143,9 +143,17 @@
       }
 
       function Calculator() {
+        const [result, setResult] = React.useState("");
+        const [operation, setOperation] = React.useState("");
+
+        function handleClick(e) {
+          console.log(e.target.dataset.button);
+        }
+
         return (
           <div className="flex gap-4">
             <Card
+              onClick={handleClick}
               className={`
             flex flex-col gap-[1.625rem] w-[22.25rem]
             pt-14 px-8 pb-8 
@@ -162,16 +170,16 @@
                   variant="muted"
                   className="flex items-center justify-end"
                 >
-                  1 + 1
+                  {operation}
                 </Text>
 
                 <div
                   className={`
-                flex itemx-center justify-between  
+                flex items-center justify-between  
               `}
                 >
                   <Text variant="muted">=</Text>
-                  <Text variant="blast">2</Text>
+                  <Text variant="blast">{result}</Text>
                 </div>
               </div>
 
@@ -180,6 +188,7 @@
                   <div key={index} className="flex gap-3">
                     {row.map((button, index) => (
                       <Button
+                        data-button={button.input}
                         key={button.input}
                         variant={button.variant}
                         className={button.className || "w-16 h-16"}
