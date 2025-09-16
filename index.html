@@ -147,13 +147,17 @@
         const [operation, setOperation] = React.useState("");
 
         function handleClick(e) {
-          console.log(e.target.dataset.button);
           const buttonClicked = e.target.dataset.button;
 
           if (!buttonClicked) return;
 
           /* If button equals to "=", calculate the operation using eval()*/
           if (buttonClicked === "=") {
+            if (
+              (operation.length >= 0 && operation.length <= 2) ||
+              operation.length % 2 === 0
+            )
+              return;
             setResult(eval(operation));
             return;
           }
@@ -165,6 +169,12 @@
               (!operation.length && buttonClicked === "/")
             )
               return;
+
+            if (result) {
+              setOperation((operation) => operation.slice(0, -1));
+              setResult("");
+              return;
+            }
 
             if (
               isNaN(buttonClicked) &&
@@ -185,8 +195,6 @@
             setOperation((operation) => operation.slice(0, -1));
           }
         }
-
-        console.log(operation);
 
         return (
           <div className="flex gap-4">
