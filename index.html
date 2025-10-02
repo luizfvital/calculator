@@ -142,9 +142,27 @@
         );
       }
 
+      const CalculatorContext = React.createContext();
+
+      function CalculatorProvider({ children }) {
+        const [history, setHistory] = React.useState([]);
+
+        function updateHistory(entry) {
+          setHistory((current) => [...current, entry]);
+        }
+
+        return (
+          <CalculatorContext.Provider value={{ history, updateHistory }}>
+            {children}
+          </CalculatorContext.Provider>
+        );
+      }
+
       function Calculator() {
         const [result, setResult] = React.useState("");
         const [operation, setOperation] = React.useState("");
+
+        const { history, updateHistory } = React.useContext(CalculatorContext);
 
         function handleClick(e) {
           const buttonClicked = e.target.dataset.button;
@@ -158,7 +176,9 @@
               operation.length % 2 === 0
             )
               return;
-            setResult(eval(operation));
+            const r = eval(operation);
+            setResult(r);
+            updateHistory(`${operation}=${r}`);
             return;
           }
 
@@ -252,10 +272,11 @@
               </Text>
 
               <ul className="flex flex-col gap-3">
-                <Text as="li">1 + 1 = 2</Text>
-                <Text as="li">2 + 3 + 1 = 6</Text>
-                <Text as="li">1 + 1 = 2</Text>
-                <Text as="li">1 + 1 = 2</Text>
+                {history.map((entry, i) => (
+                  <Text key={i} as="li">
+                    {entry}
+                  </Text>
+                ))}
               </ul>
             </Card>
           </div>
@@ -265,7 +286,9 @@
       function App() {
         return (
           <main className="py-28 px-4">
-            <Calculator />
+            <CalculatorProvider>
+              <Calculator />
+            </CalculatorProvider>
           </main>
         );
       }
