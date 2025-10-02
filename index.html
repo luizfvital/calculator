@@ -148,8 +148,17 @@
         const [history, setHistory] = React.useState([]);
 
         function updateHistory(entry) {
-          setHistory((current) => [...current, entry]);
+          setHistory((current) => {
+            const r = [...current, entry];
+            localStorage.setItem("history", JSON.stringify(r));
+
+            return r;
+          });
         }
+
+        React.useEffect(() => {
+          setHistory(JSON.parse(localStorage.getItem("history") || "[]"));
+        }, []);
 
         return (
           <CalculatorContext.Provider value={{ history, updateHistory }}>
